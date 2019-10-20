@@ -1,6 +1,9 @@
 package main
 
 import "os"
+import "config"
+import "common"
+import "utils"
 import "hwmon"
 import "fmt"
 import "mailbox"
@@ -41,21 +44,31 @@ func main() {
     }
     mb_hwmon := mailbox.CreateMailboxHwmon()
     isBreakTask := false
+    var data common.DeviceInfo_t
     for {
         msg :=<-mb_hwmon.Channel
-        switch msg.Function {
-        case hwmon.EXIT_APPLICATION:
+	msg_func := msg.Function
+        switch msg_func {
+        case config.EXIT_APPLICATION:
+            data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_OK, Value:"Stop task" }
+	case config.DISABLE_OUTOFBAND_INTERFACE:
+            data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_OK, Value:"Disable interface" }
+	case config.ENABLE_OUTOFBAND_INTERFACE:
+            data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_OK, Value:"Enable interface" }
+        default:
+            data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_ERROR, Value:"Command Not Found" }
+	}
+        var res_msg common.Msg_t
+        //res_bytes := hwmon.ConvertDeviceInfoToBytes(data)
+	res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
+        msg.ChannelDst <-res_msg
 
+	switch msg_func {
+        case config.EXIT_APPLICATION:
             isBreakTask = true
-	    var res_msg mailbox.Msg_t
-            data := hwmon.DeviceInfo_t { Entity:0, Instant:0, ValueType:hwmon.TYPE_RSP_EXIT, Value:"Stop task" }
-            res_bytes := hwmon.ConvertDeviceInfoToBytes(data)
-            res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, res_bytes)
-            msg.ChannelDst <-res_msg
-
-	    data = hwmon.DeviceInfo_t { Entity:0, Instant:0, ValueType:hwmon.TYPE_REQ_EXIT, Value:0 }
-	    res_msg = hwmon.TalkToRest(hwmon.EXIT_APPLICATION, data)
-	    fmt.Println(res_msg)
+	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+	    res_msg = utils.TalkToRest(config.EXIT_APPLICATION, data)
+	    //fmt.Println(res_msg)
             for {
                 isFuncExit := true
                 for index := range tasks {
@@ -68,12 +81,21 @@ func main() {
                     break
                 }
             }
-	    res_msg = hwmon.TalkToDao(hwmon.EXIT_APPLICATION, data)
-	    fmt.Println(res_msg)
-	    res_msg = hwmon.TalkToMsghndlr(hwmon.EXIT_APPLICATION, data)
-	    fmt.Println(res_msg)
+	    res_msg = utils.TalkToDao(config.EXIT_APPLICATION, data)
+	    //fmt.Println(res_msg)
+	    res_msg = utils.TalkToMsghndlr(config.EXIT_APPLICATION, data)
+	    //fmt.Println(res_msg)
+	case config.DISABLE_OUTOFBAND_INTERFACE:
+	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+	    res_msg = utils.TalkToRest(config.DISABLE_OUTOFBAND_INTERFACE, data)
+	    //fmt.Println(res_msg)
+	case config.ENABLE_OUTOFBAND_INTERFACE:
+	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+	    res_msg = utils.TalkToRest(config.ENABLE_OUTOFBAND_INTERFACE, data)
+	    //fmt.Println(res_msg)
         default:
 	}
+
         //mb_hwmon.Channel <-msg
         if isBreakTask {
             break

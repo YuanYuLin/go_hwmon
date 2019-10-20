@@ -1,9 +1,14 @@
 package hwmon
 
+import "common"
+import "encoding/json"
 import "net/http"
+//import "time"
 import "context"
 import "mailbox"
 import "fmt"
+import "ops_log"
+import "config"
 
 type TaskRest struct {
 	Folder	string
@@ -16,22 +21,14 @@ type rest_api_t struct {
     Function	rest_api_function_t
 }
 
-var api_url_prefix = "/api/{api_version}"
-
-var rest_api_list = []rest_api_t {
-    {"/api/v1/hwmon/get/device/temperature",	GetDeviceTemperature},
-    {"/api/v1/hwmon/set/device/temperature",	SetDeviceTemperature},
-
-    {"/api/v1/hwmon/get/device/averagepower",	GetDeviceAveragePower},
-    {"/api/v1/hwmon/set/device/averagepower",	SetDeviceAveragePower},
-
-    {"/api/v1/hwmon/get/device/maxpower",	GetDeviceMaxPower},
-    {"/api/v1/hwmon/set/device/maxpower",	SetDeviceMaxPower},
-
-    {"/api/v1/hwmon/exit/main",			ExitMain},
+func responseWithJsonV1(w http.ResponseWriter, code int,  data interface{}) {
+    json_msg := common.JsonMsg_t { Status:1, Version:1, Data:data }
+    response, _ := json.Marshal(json_msg)
+    ops_log.Debug(0x01, "Response : %s", string(response))
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(code)
+    w.Write(response)
 }
-
-var SERVICE_PORT = "localhost:8080"
 
 func (o* TaskRest)SetFolder(folder string) {
 	o.Folder = folder
@@ -39,29 +36,81 @@ func (o* TaskRest)SetFolder(folder string) {
 
 func (o* TaskRest)Run() {
 	mux := http.NewServeMux()
-	srv  := http.Server{Addr: SERVICE_PORT, Handler: mux}
-
 	for _, rest := range rest_api_list {
 		mux.HandleFunc(rest.Url, rest.Function)
 	}
-	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		}
-	}()
+
+	srv  := http.Server{ Addr: config.IN_SERVICE_PORT, Handler: mux }
+	is_started_srv := true // default enabled
+	is_kill_srv := false
+
+	//var srv2 http.Server
+	srv2 := http.Server{ Addr: config.OUT_SERVICE_PORT, Handler: mux }
+	is_started_srv2 := false
+	is_kill_srv2 := false
+
 	mb_rest := mailbox.CreateMailboxRest()
-	var res_msg mailbox.Msg_t
+	var res_msg common.Msg_t
 	isBreakTask := false
+
+	if is_started_srv {
+		go func() {
+			if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				fmt.Println(err)
+			}
+			fmt.Printf("Stop Listen And Serve\n")
+		}()
+	}
+
+	var data common.DeviceInfo_t
 	for {
 		msg :=<-mb_rest.Channel
 		switch msg.Function {
-		case EXIT_APPLICATION:
-			srv.Shutdown(context.Background())
+		case config.EXIT_APPLICATION:
+			if is_started_srv {
+				is_started_srv = false
+				is_kill_srv = true
+			}
+			if is_started_srv2 {
+				is_started_srv2 = false
+				is_kill_srv2 = true
+			}
 			isBreakTask = true
-			data := DeviceInfo_t { Entity:0, Instant:0, ValueType:TYPE_RSP_EXIT, Value:"Stop task" }
-			res_bytes := ConvertDeviceInfoToBytes(data)
-			res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, res_bytes)
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_OK, Value:"Stop task" }
+		case config.ENABLE_OUTOFBAND_INTERFACE:
+			if !is_started_srv2 {
+				go func() {
+					if err := srv2.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+						fmt.Println(err)
+					}
+					fmt.Printf("Stop Listen And Serve2\n")
+				}()
+			}
+			is_started_srv2 = true
+			is_kill_srv2 = false
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_OK, Value:"Enabled OFBI" }
+		case config.DISABLE_OUTOFBAND_INTERFACE:
+			if is_started_srv2 {
+				is_started_srv2 = false
+				is_kill_srv2 = true
+				fmt.Printf("Disable out of band interface\n")
+			}
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_OK, Value:"Disable OFBI" }
+		default:
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_ERROR, Value:"Disable OFBI" }
 		}
+		//res_bytes := ConvertDeviceInfoToBytes(data)
+		res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
 		msg.ChannelDst <- res_msg
+		if is_kill_srv {
+			srv.Shutdown(context.Background())
+		}
+		if is_kill_srv2 {
+			fmt.Printf("closing srv2\n")
+			srv2.Shutdown(context.Background())
+			is_kill_srv2 = false
+			fmt.Printf("closed srv2\n")
+		}
 		if isBreakTask {
 			break
 		}

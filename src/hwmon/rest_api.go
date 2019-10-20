@@ -1,47 +1,79 @@
 package hwmon
 
-import "encoding/json"
+import "common"
+import "utils"
+import "config"
 import "net/http"
 import "ops_log"
 import "io/ioutil"
 //import "fmt"
 
-type json_msg_t struct {
-    Status              int     `json:"status"`
-    Version             int     `json:"version"`
-    Data                interface{} `json:"data"`
-}
-
-func responseWithJsonV1(w http.ResponseWriter, code int,  data interface{}) {
-    json_msg := json_msg_t { Status:1, Version:1, Data:data }
-    response, _ := json.Marshal(json_msg)
-    ops_log.Debug(0x01, "Response : %s", string(response))
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(code)
-    w.Write(response)
-}
-
-func GetDeviceTemperature(w http.ResponseWriter, r* http.Request) {
+func GetDeviceMaxTemp(w http.ResponseWriter, r* http.Request) {
     b, err := ioutil.ReadAll(r.Body)
     defer r.Body.Close()
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
 
-    data := ConvertBytesToDeviceInfo(b)
-    obj := PullObjDeviceTemperature(data.Entity, data.Instant)
+    data := utils.ConvertBytesToDeviceInfo(b)
+    obj := utils.PullObjDeviceMaxTemp(data.Entity, data.Instant)
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+func SetDeviceMaxTemp(w http.ResponseWriter, r* http.Request) {
+    b, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+    data := utils.ConvertBytesToDeviceInfo(b)
+    val := utils.ToFloat(data.Value)
+    obj := utils.PushObjDeviceMaxTemp(data.Entity, data.Instant, val)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
-func SetDeviceTemperature(w http.ResponseWriter, r* http.Request) {
+func GetDeviceAbsTemp(w http.ResponseWriter, r* http.Request) {
     b, err := ioutil.ReadAll(r.Body)
     defer r.Body.Close()
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := ConvertBytesToDeviceInfo(b)
-    val := data.Value.(float64)
-    obj := PushObjDeviceTemperature(data.Entity, data.Instant, val)
+
+    data := utils.ConvertBytesToDeviceInfo(b)
+    obj := utils.PullObjDeviceAbsTemp(data.Entity, data.Instant)
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+func GetDeviceRelTemp(w http.ResponseWriter, r* http.Request) {
+    b, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+
+    data := utils.ConvertBytesToDeviceInfo(b)
+    obj := utils.PullObjDeviceRelTemp(data.Entity, data.Instant)
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+
+func SetDeviceAbsTemp(w http.ResponseWriter, r* http.Request) {
+    b, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+    data := utils.ConvertBytesToDeviceInfo(b)
+    val := utils.ToFloat(data.Value)
+    obj := utils.PushObjDeviceAbsTemp(data.Entity, data.Instant, val)
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+func SetDeviceRelTemp(w http.ResponseWriter, r* http.Request) {
+    b, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+    data := utils.ConvertBytesToDeviceInfo(b)
+    val := utils.ToFloat(data.Value)
+    obj := utils.PushObjDeviceRelTemp(data.Entity, data.Instant, val)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
@@ -52,8 +84,8 @@ func GetDeviceAveragePower(w http.ResponseWriter, r* http.Request) {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
 
-    data := ConvertBytesToDeviceInfo(b)
-    obj := PullObjDeviceAveragePower(data.Entity, data.Instant)
+    data := utils.ConvertBytesToDeviceInfo(b)
+    obj := utils.PullObjDeviceAveragePower(data.Entity, data.Instant)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
@@ -63,9 +95,9 @@ func SetDeviceAveragePower(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := ConvertBytesToDeviceInfo(b)
+    data := utils.ConvertBytesToDeviceInfo(b)
     val := data.Value.(float64)
-    obj := PushObjDeviceAveragePower(data.Entity, data.Instant, val)
+    obj := utils.PushObjDeviceAveragePower(data.Entity, data.Instant, val)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
@@ -76,8 +108,8 @@ func GetDeviceMaxPower(w http.ResponseWriter, r* http.Request) {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
 
-    data := ConvertBytesToDeviceInfo(b)
-    obj := PullObjDeviceMaxPower(data.Entity, data.Instant)
+    data := utils.ConvertBytesToDeviceInfo(b)
+    obj := utils.PullObjDeviceMaxPower(data.Entity, data.Instant)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
@@ -87,9 +119,9 @@ func SetDeviceMaxPower(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := ConvertBytesToDeviceInfo(b)
+    data := utils.ConvertBytesToDeviceInfo(b)
     val := data.Value.(float64)
-    obj := PushObjDeviceMaxPower(data.Entity, data.Instant, val)
+    obj := utils.PushObjDeviceMaxPower(data.Entity, data.Instant, val)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
@@ -99,8 +131,64 @@ func ExitMain(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := DeviceInfo_t { Entity:0, Instant:0, ValueType:TYPE_REQ_EXIT, Value:0 }
-    res_msg := TalkToHwmon(EXIT_APPLICATION, data)
-    obj := ConvertBytesToDeviceInfo(res_msg.Data)
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+    res_msg := utils.TalkToHwmon(config.EXIT_APPLICATION, data)
+    //obj := ConvertBytesToDeviceInfo(res_msg.Data)
+    obj := res_msg.Data
     responseWithJsonV1(w, http.StatusOK, obj)
 }
+
+func EnableOutOfBandInterface(w http.ResponseWriter, r* http.Request) {
+    _, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+    res_msg := utils.TalkToHwmon(config.ENABLE_OUTOFBAND_INTERFACE, data)
+    //obj := ConvertBytesToDeviceInfo(res_msg.Data)
+    obj := res_msg.Data
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+
+func DisableOutOfBandInterface(w http.ResponseWriter, r* http.Request) {
+    _, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+    res_msg := utils.TalkToHwmon(config.DISABLE_OUTOFBAND_INTERFACE, data)
+    //obj := ConvertBytesToDeviceInfo(res_msg.Data)
+    obj := res_msg.Data
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+
+var rest_api_list = []rest_api_t {
+    /*
+     *
+     */
+    {"/api/v1/hwmon/get/device/abstemp",	GetDeviceAbsTemp},
+    {"/api/v1/hwmon/set/device/abstemp",	SetDeviceAbsTemp},
+    {"/api/v1/hwmon/get/device/maxtemp",	GetDeviceMaxTemp},
+    {"/api/v1/hwmon/set/device/maxtemp",	SetDeviceMaxTemp},
+
+    {"/api/v1/hwmon/get/device/reltemp",	GetDeviceRelTemp},
+    {"/api/v1/hwmon/set/device/reltemp",	SetDeviceRelTemp},
+
+    /*
+     *
+     */
+    {"/api/v1/hwmon/get/device/averagepower",	GetDeviceAveragePower},
+    {"/api/v1/hwmon/set/device/averagepower",	SetDeviceAveragePower},
+    {"/api/v1/hwmon/get/device/maxpower",	GetDeviceMaxPower},
+    {"/api/v1/hwmon/set/device/maxpower",	SetDeviceMaxPower},
+
+    /*
+     *
+     */
+    {"/api/v1/hwmon/exit/main",			ExitMain},
+    {"/api/v1/hwmon/enable/out/interface",	EnableOutOfBandInterface},
+    {"/api/v1/hwmon/disable/out/interface",	DisableOutOfBandInterface},
+}
+
