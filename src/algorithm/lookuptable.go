@@ -1,14 +1,14 @@
-package utils
+package algorithm
 
 //import "fmt"
 //import "math"
 
-type AlgorithmFanTable_t struct {
+type LookupTable_t struct {
 
 	DBKey string
 }
 
-func (o* AlgorithmFanTable_t)Compute(currentTemperature float64) float64 {
+func (o* LookupTable_t)Compute(currentTemperature float64) float64 {
 	val := currentTemperature
 	if val < 25 {
 		return 20

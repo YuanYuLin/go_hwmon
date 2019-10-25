@@ -18,7 +18,7 @@ def set_global(args):
     arch = ops.getEnv("ARCH_ALT")
     pkg_path = args["pkg_path"]
     output_dir = args["output_path"]
-    GOPATH=output_dir
+    GOPATH=output_dir#ops.path_join(output_dir, "src")
     servlet_dir = ops.path_join(output_dir, "/build")
 
 def MAIN_ENV(args):
@@ -34,6 +34,7 @@ def MAIN_ENV(args):
 def MAIN_EXTRACT(args):
     set_global(args)
 
+    #ops.mkdir(GOPATH)
     CMD = [ops.path_join(pkg_path, go_pkgs_dep_script)]
     res = ops.execCmd(CMD, GOPATH, False, None)
     #if res[2] != 0:
@@ -43,7 +44,7 @@ def MAIN_EXTRACT(args):
 
     ops.copyto(ops.path_join(pkg_path, "src"), GOPATH)
     ops.copyto(ops.path_join(pkg_path, "Makefile"), GOPATH)
-    ops.copyto(ops.path_join(pkg_path, "main.go"), GOPATH)
+    #ops.copyto(ops.path_join(pkg_path, "main.go"), GOPATH)
 
     return True
 

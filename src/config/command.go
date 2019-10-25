@@ -1,14 +1,5 @@
 package config
 
-var IN_SERVICE_PORT = "localhost:8088"
-var OUT_SERVICE_PORT = "0.0.0.0:8080"
-/*
- *
- */
-const ENTITY_CPU	int	= 1
-const ENTITY_AMB	int	= 2
-const ENTITY_AIC	int	= 3
-const ENTITY_DIMM	int	= 4
 /*
  *
  */
@@ -34,24 +25,17 @@ const GET_EXPECT_FAN_DUTY		string = "g_expect_fan_duty"
 const SET_EXPECT_FAN_DUTY		string = "s_expect_fan_duty"
 const GET_ALL_EXPECT_FAN_DUTY		string = "g_all_expect_fan_duty"
 
+const GET_ALL_DEVICE_FAN_MAP		string = "g_a_d_fan_map"
+const GET_DEVICE_FAN_MAP		string = "g_d_fan_map"
+const SET_DEVICE_FAN_MAP		string = "s_d_fan_map"
+
+const GET_DEVICE_FAN_DUTY_OUTPUT	string = "g_d_fan_duty_out"
+const SET_DEVICE_FAN_DUTY_OUTPUT	string = "s_d_fan_duty_out"
+const GET_ALL_FAN_DUTY_OUTPUT		string = "g_all_fan_duty_out"
+
 const GET_OBJ_BY_KEY			string = "g_o_b_k"
 const SET_OBJ_BY_KEY			string = "s_o_b_k"
 
 const EXIT_APPLICATION			string = "exit_app"
 const ENABLE_OUTOFBAND_INTERFACE	string = "enable_out_ifc"
 const DISABLE_OUTOFBAND_INTERFACE	string = "disable_out_ifc"
-/*
- *
- */
-const TYPE_OBJECT		string = "object"
-const TYPE_TEMPERATURE		string = "temperature"
-const TYPE_AVERAGEPOWER		string = "averagepower"
-const TYPE_MAXPOWER		string = "maxpower"
-// Used in "EXPECT FAN DUTY"
-const TYPE_FANDUTY_TEMPERATURE	string = "fdt"
-const TYPE_FANDUTY_POWER	string = "fdp"
-// Used in "SET" response packet
-const TYPE_RSP_OK		string = "rsp_ok"
-const TYPE_RSP_ERROR		string = "rsp_error"
-//
-const TYPE_REQ_CMD		string = "req_cmd"

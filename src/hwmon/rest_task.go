@@ -7,7 +7,7 @@ import "net/http"
 import "context"
 import "mailbox"
 import "fmt"
-import "ops_log"
+//import "ops_log"
 import "config"
 
 type TaskRest struct {
@@ -24,7 +24,7 @@ type rest_api_t struct {
 func responseWithJsonV1(w http.ResponseWriter, code int,  data interface{}) {
     json_msg := common.JsonMsg_t { Status:1, Version:1, Data:data }
     response, _ := json.Marshal(json_msg)
-    ops_log.Debug(0x01, "Response : %s", string(response))
+    //ops_log.Debug(0x01, "Response : %s", string(response))
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(code)
     w.Write(response)

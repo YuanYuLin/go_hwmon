@@ -125,6 +125,19 @@ func SetDeviceMaxPower(w http.ResponseWriter, r* http.Request) {
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
+func GetMapAllDeviceFan(w http.ResponseWriter, r* http.Request) {
+    obj := utils.PullObjListDeviceFanMap()
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+func GetMapAllFanDutyOut(w http.ResponseWriter, r* http.Request) {
+    obj := utils.PullObjListDeviceFanDutyOutput()
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+func GetMapAllDevicesExpectFanDuty(w http.ResponseWriter, r* http.Request) {
+    obj := utils.PullObjListDevicesExpectFanDuty()
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+
 func ExitMain(w http.ResponseWriter, r* http.Request) {
     _, err := ioutil.ReadAll(r.Body)
     defer r.Body.Close()
@@ -183,6 +196,13 @@ var rest_api_list = []rest_api_t {
     {"/api/v1/hwmon/set/device/averagepower",	SetDeviceAveragePower},
     {"/api/v1/hwmon/get/device/maxpower",	GetDeviceMaxPower},
     {"/api/v1/hwmon/set/device/maxpower",	SetDeviceMaxPower},
+
+    /*
+     *
+     */
+    {"/api/v1/hwmon/get/map/alldevicefan",	GetMapAllDeviceFan},
+    {"/api/v1/hwmon/get/map/allfandutyout",	GetMapAllFanDutyOut},
+    {"/api/v1/hwmon/get/map/allexpectduty",	GetMapAllDevicesExpectFanDuty},
 
     /*
      *

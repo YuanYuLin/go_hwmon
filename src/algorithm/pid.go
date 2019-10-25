@@ -1,9 +1,9 @@
-package utils
+package algorithm
 
 //import "fmt"
 import "math"
 
-type AlgorithmPid_t struct {
+type Pid_t struct {
 	Kp float64
 	Ki float64
 	Kd float64
@@ -19,7 +19,7 @@ type AlgorithmPid_t struct {
 	DBKey string
 }
 
-func (o* AlgorithmPid_t)Compute(currentTemperature float64) float64 {
+func (o* Pid_t)Compute(currentTemperature float64) float64 {
 	//Pid
 	err := currentTemperature - o.TargetTemperature
 	P := o.Kp * err
