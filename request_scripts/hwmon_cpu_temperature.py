@@ -22,6 +22,24 @@ def request_list(hostname, out_format):
     json += '{"entity":%d, "instant":%d}' % (entity, instant)
     url='http://%s/api/v1/hwmon/get/device/reltemp' % hostname
     utils.response_output(out_format, utils.http_request(url, json))
+	
+    instant = 2
+	
+    json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, 0.0)
+    url='http://%s/api/v1/hwmon/set/device/maxtemp' % hostname
+    utils.response_output(out_format, utils.http_request(url, json))
+
+    json = '{"entity":%d, "instant":%d}' % (entity, instant)
+    url='http://%s/api/v1/hwmon/get/device/maxtemp' % hostname
+    utils.response_output(out_format, utils.http_request(url, json))
+
+    json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, -10.0)
+    url='http://%s/api/v1/hwmon/set/device/reltemp' % hostname
+    utils.response_output(out_format, utils.http_request(url, json))
+
+    json += '{"entity":%d, "instant":%d}' % (entity, instant)
+    url='http://%s/api/v1/hwmon/get/device/reltemp' % hostname
+    utils.response_output(out_format, utils.http_request(url, json))
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
