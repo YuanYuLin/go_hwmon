@@ -26,77 +26,77 @@ func PushObj(key string, val interface{}) (bool){
 }
 
 // GET
-func PullObjDeviceMaxTemp(entity int, instant int) (common.DeviceInfo_t) {
+func PullObjDeviceMaxTemp(entity int32, instant int32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_TEMPERATURE, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_MAXTEMP, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PullObjDeviceAbsTemp(entity int, instant int) (common.DeviceInfo_t) {
+func PullObjDeviceAbsTemp(entity int32, instant int32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_TEMPERATURE, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_ABSTEMP, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PullObjListDeviceAbsTemp(entity int) (map[string]common.DeviceInfo_t) {
+func PullObjListDeviceAbsTemp(entity int32) (map[string]common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:-1, ValueType:config.TYPE_TEMPERATURE, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_LIST_ABSTEMP, data)
 	obj := (msg.Data).(map[string]common.DeviceInfo_t)
 	return obj
 }
-func PullObjDeviceRelTemp(entity int, instant int) (common.DeviceInfo_t) {
+func PullObjDeviceRelTemp(entity int32, instant int32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_TEMPERATURE, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_RELTEMP, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PullObjListDeviceRelTemp(entity int) (map[string]common.DeviceInfo_t) {
+func PullObjListDeviceRelTemp(entity int32) (map[string]common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:-1, ValueType:config.TYPE_TEMPERATURE, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_LIST_RELTEMP, data)
 	obj := (msg.Data).(map[string]common.DeviceInfo_t)
 	return obj
 }
 // SET
-func PushObjDeviceMaxTemp(entity int, instant int, value float64) (common.DeviceInfo_t){
+func PushObjDeviceMaxTemp(entity int32, instant int32, value float32) (common.DeviceInfo_t){
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_TEMPERATURE, Value:value }
 	msg := TalkToDao(config.SET_DEVICE_MAXTEMP, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PushObjDeviceAbsTemp(entity int, instant int, value float64) (common.DeviceInfo_t){
+func PushObjDeviceAbsTemp(entity int32, instant int32, value float32) (common.DeviceInfo_t){
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_TEMPERATURE, Value:value }
 	msg := TalkToDao(config.SET_DEVICE_ABSTEMP, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PushObjDeviceRelTemp(entity int, instant int, value float64) (common.DeviceInfo_t){
+func PushObjDeviceRelTemp(entity int32, instant int32, value float32) (common.DeviceInfo_t){
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_TEMPERATURE, Value:value }
 	msg := TalkToDao(config.SET_DEVICE_RELTEMP, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
 // GET
-func PullObjDeviceAveragePower(entity int, instant int) (common.DeviceInfo_t) {
+func PullObjDeviceAveragePower(entity int32, instant int32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_AVERAGEPOWER, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_AVERAGEPOWER, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PullObjListDeviceAveragePower(entity int) (map[string]common.DeviceInfo_t) {
+func PullObjListDeviceAveragePower(entity int32) (map[string]common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:-1, ValueType:config.TYPE_AVERAGEPOWER, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_LIST_AVERAGEPOWER, data)
 	obj := (msg.Data).(map[string]common.DeviceInfo_t)
 	return obj
 }
 // SET
-func PushObjDeviceAveragePower(entity int, instant int, value float64) (common.DeviceInfo_t){
+func PushObjDeviceAveragePower(entity int32, instant int32, value float32) (common.DeviceInfo_t){
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_AVERAGEPOWER, Value:value }
 	msg := TalkToDao(config.SET_DEVICE_AVERAGEPOWER, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
 // SET
-func PushObjExpectFanDuty(key string, entity int, instant int, value float64) (common.DeviceInfo_t) {
+func PushObjExpectFanDuty(key string, entity int32, instant int32, value float32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, Key:key, ValueType:config.TYPE_FANDUTY, Value:value }
 	msg := TalkToDao(config.SET_EXPECT_FAN_DUTY, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
@@ -109,33 +109,33 @@ func PullObjListDeviceFanMap()(map[string]common.DeviceInfo_t) {
 	return obj
 }
 // GET
-func PullObjDeviceFanMap(entity int, instant int) (map[string]common.DeviceInfo_t) {
+func PullObjDeviceFanMap(entity int32, instant int32) (map[string]common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_DEVICEFANMAP, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_FAN_MAP, data)
 	obj := (msg.Data).(map[string]common.DeviceInfo_t)
 	return obj
 }
 // SET
-func PushObjDeviceFanMap(entity int, instant int, fan_index int) (common.DeviceInfo_t) {
+func PushObjDeviceFanMap(entity int32, instant int32, fan_index int32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_DEVICEFANMAP, Value:fan_index }
 	msg := TalkToDao(config.SET_DEVICE_FAN_MAP, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
 
-func PullObjDeviceFanDutyOutput(entity int, instant int) (common.DeviceInfo_t) {
+func PullObjDeviceFanDutyOutput(entity int32, instant int32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_FANDUTY, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_FAN_DUTY_OUTPUT, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PushObjDeviceFanDutyOutput(entity int, instant int, duty float64) (common.DeviceInfo_t) {
+func PushObjDeviceFanDutyOutput(entity int32, instant int32, duty float32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_FANDUTY, Value:duty }
 	msg := TalkToDao(config.SET_DEVICE_FAN_DUTY_OUTPUT, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func InitObjDeviceFanDutyOutput(entity int, instant int, duty float64) (common.DeviceInfo_t) {
+func InitObjDeviceFanDutyOutput(entity int32, instant int32, duty float32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_INITFANDUTY, Value:duty }
 	msg := TalkToDao(config.SET_DEVICE_FAN_DUTY_OUTPUT, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
@@ -149,14 +149,14 @@ func PullObjListDeviceFanDutyOutput() (map[string]common.DeviceInfo_t) {
 	return obj
 }
 /*
-func PushObjExpectFanDutyByTemperature(entity int, instant int, key string, value float64) (common.DeviceInfo_t) {
+func PushObjExpectFanDutyByTemperature(entity int, instant int, key string, value float32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, Key:key, ValueType:config.TYPE_FANDUTY_TEMPERATURE, Value:value }
 	msg := TalkToDao(config.SET_EXPECT_FAN_DUTY, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
 
-func PushObjExpectFanDutyByPower(entity int, instant int, value float64) (common.DeviceInfo_t) {
+func PushObjExpectFanDutyByPower(entity int, instant int, value float32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_FANDUTY_POWER, Value:value }
 	msg := TalkToDao(config.SET_EXPECT_FAN_DUTY, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
@@ -164,20 +164,20 @@ func PushObjExpectFanDutyByPower(entity int, instant int, value float64) (common
 }
 */
 //GET
-func PullObjDeviceMaxPower(entity int, instant int) (common.DeviceInfo_t) {
+func PullObjDeviceMaxPower(entity int32, instant int32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_MAXPOWER, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_MAXPOWER, data)
 	obj := (msg.Data).(common.DeviceInfo_t)
 	return obj
 }
-func PullObjListDeviceMaxPower(entity int) (map[string]common.DeviceInfo_t) {
+func PullObjListDeviceMaxPower(entity int32) (map[string]common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:-1, ValueType:config.TYPE_MAXPOWER, Value:0 }
 	msg := TalkToDao(config.GET_DEVICE_LIST_MAXPOWER, data)
 	obj := (msg.Data).(map[string]common.DeviceInfo_t)
 	return obj
 }
 //SET
-func PushObjDeviceMaxPower(entity int, instant int, value float64) (common.DeviceInfo_t) {
+func PushObjDeviceMaxPower(entity int32, instant int32, value float32) (common.DeviceInfo_t) {
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, ValueType:config.TYPE_MAXPOWER, Value:value }
 	msg := TalkToDao(config.SET_DEVICE_MAXPOWER, data)
 	obj := (msg.Data).(common.DeviceInfo_t)

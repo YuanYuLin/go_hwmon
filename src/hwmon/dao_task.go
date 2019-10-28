@@ -3,7 +3,7 @@ package hwmon
 import "common"
 import "mailbox"
 //import "encoding/json"
-import "strconv"
+//import "strconv"
 import "strings"
 import "config"
 import "fmt"
@@ -26,33 +26,40 @@ func getKeyObj(dev common.DeviceInfo_t) (string) {
 }
 
 func getKey(obj common.DeviceInfo_t) (string) {
-	return obj.ValueType + "_" + strconv.Itoa(obj.Entity) + "_" + strconv.Itoa(obj.Instant)
+	key := fmt.Sprintf("_VT:%d_E:%d_I:%d_", obj.ValueType, obj.Entity, obj.Instant)
+	return key
 }
 
 func getKeyValueTypeEntity(obj common.DeviceInfo_t) (string) {
-	return obj.ValueType + "_" + strconv.Itoa(obj.Entity) + "_"
+	key := fmt.Sprintf("_VT:%d_E:%d_", obj.ValueType, obj.Entity)
+	return key
 }
 
 func getKeyEntity(obj common.DeviceInfo_t) (string){
-	return "_" + strconv.Itoa(obj.Entity) + "_"
+	key := fmt.Sprintf("_E:%d_", obj.Entity)
+	return key
 }
 
 func getKeyEntityInstant(obj common.DeviceInfo_t) (string) {
-	return "_" + strconv.Itoa(obj.Entity) + "_" + strconv.Itoa(obj.Instant) + "_"
+	key := fmt.Sprintf("_E:%d_I:%d_", obj.Entity, obj.Instant)
+	return key
 }
 
 func getKeyEntityInstantValue(obj common.DeviceInfo_t) (string) {
-	key := "_" + strconv.Itoa(obj.Entity) + "_" + strconv.Itoa(obj.Instant)
+	//key := "_" + strconv.Itoa(obj.Entity) + "_" + strconv.Itoa(obj.Instant)
+	key := ""
 	val := obj.Value
 	switch v:=val.(type) {
 	case string:
-		key = key + "_" + val.(string)
-	case int:
-		key = fmt.Sprintf("%s_%d", key, val.(int))
+		key = fmt.Sprintf("_E:%d_I:%d_V:%s_", obj.Entity, obj.Instant, val.(string))
+	case int64:
+		key = fmt.Sprintf("_E:%d_I:%d_V:%d_", obj.Entity, obj.Instant, val.(int64))
+	case int32:
+		key = fmt.Sprintf("_E:%d_I:%d_V:%d_", obj.Entity, obj.Instant, val.(int32))
 	case float64:
-		key = fmt.Sprintf("%s_%f", key, val.(float64))
+		key = fmt.Sprintf("_E:%d_I:%d_V:%f_", obj.Entity, obj.Instant, val.(float64))
 	case float32:
-		key = fmt.Sprintf("%s_%f", key, val.(float32))
+		key = fmt.Sprintf("_E:%d_I:%d_V:%f_", obj.Entity, obj.Instant, val.(float32))
 	default:
 		fmt.Print("Value Type : ")
 		fmt.Println(v)

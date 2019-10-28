@@ -1,6 +1,6 @@
 package main
 
-import "os"
+//import "os"
 import "config"
 import "common"
 import "utils"
@@ -17,15 +17,16 @@ import "mailbox"
  *    request               DataStore
  */
 func main() {
+/*
     if len(os.Args) <= 1 {
         fmt.Println("program <www_dir>")
         os.Exit(-1)
     }
     www_path := os.Args[1]
-
+*/
     fmt.Println("Creating & Running TaskRest")
     task_rest := new (hwmon.TaskRest)
-    task_rest.SetFolder(www_path)
+//    task_rest.SetFolder(www_path)
     go task_rest.Run()
 
     fmt.Println("Creating & Running TaskDao")
@@ -66,7 +67,7 @@ func main() {
 	switch msg_func {
         case config.EXIT_APPLICATION:
             isBreakTask = true
-	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
 	    res_msg = utils.TalkToRest(config.EXIT_APPLICATION, data)
 	    //fmt.Println(res_msg)
             for {
@@ -86,11 +87,11 @@ func main() {
 	    res_msg = utils.TalkToMsghndlr(config.EXIT_APPLICATION, data)
 	    //fmt.Println(res_msg)
 	case config.DISABLE_OUTOFBAND_INTERFACE:
-	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
 	    res_msg = utils.TalkToRest(config.DISABLE_OUTOFBAND_INTERFACE, data)
 	    //fmt.Println(res_msg)
 	case config.ENABLE_OUTOFBAND_INTERFACE:
-	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+	    data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
 	    res_msg = utils.TalkToRest(config.ENABLE_OUTOFBAND_INTERFACE, data)
 	    //fmt.Println(res_msg)
         default:

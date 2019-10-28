@@ -4,8 +4,28 @@ import "encoding/json"
 import "common"
 import "mailbox"
 
-func ToFloat(val interface{}) (float64) {
-	return val.(float64)
+func ToFloat(val interface{}) (float32) {
+	var result float32
+	result = -1
+	switch val.(type) {
+	case float64:
+		result = float32(val.(float64))
+	case float32:
+		result = val.(float32)
+	}
+	return result
+}
+
+func ToInt(val interface{}) (int32) {
+	var result int32
+	result = -1
+	switch val.(type) {
+	case int64:
+		result = int32(val.(int64))
+	case int32:
+		result = val.(int32)
+	}
+	return result
 }
 
 func ConvertBytesToDeviceInfo(bytes []byte) (common.DeviceInfo_t) {

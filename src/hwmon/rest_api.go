@@ -96,7 +96,7 @@ func SetDeviceAveragePower(w http.ResponseWriter, r* http.Request) {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
     data := utils.ConvertBytesToDeviceInfo(b)
-    val := data.Value.(float64)
+    val := utils.ToFloat(data.Value)
     obj := utils.PushObjDeviceAveragePower(data.Entity, data.Instant, val)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
@@ -120,7 +120,7 @@ func SetDeviceMaxPower(w http.ResponseWriter, r* http.Request) {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
     data := utils.ConvertBytesToDeviceInfo(b)
-    val := data.Value.(float64)
+    val := utils.ToFloat(data.Value)
     obj := utils.PushObjDeviceMaxPower(data.Entity, data.Instant, val)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
@@ -144,7 +144,7 @@ func ExitMain(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
     res_msg := utils.TalkToHwmon(config.EXIT_APPLICATION, data)
     //obj := ConvertBytesToDeviceInfo(res_msg.Data)
     obj := res_msg.Data
@@ -157,7 +157,7 @@ func EnableOutOfBandInterface(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
     res_msg := utils.TalkToHwmon(config.ENABLE_OUTOFBAND_INTERFACE, data)
     //obj := ConvertBytesToDeviceInfo(res_msg.Data)
     obj := res_msg.Data
@@ -170,7 +170,7 @@ func DisableOutOfBandInterface(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQ_CMD, Value:0 }
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
     res_msg := utils.TalkToHwmon(config.DISABLE_OUTOFBAND_INTERFACE, data)
     //obj := ConvertBytesToDeviceInfo(res_msg.Data)
     obj := res_msg.Data

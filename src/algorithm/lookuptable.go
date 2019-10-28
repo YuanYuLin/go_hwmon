@@ -8,7 +8,7 @@ type LookupTable_t struct {
 	DBKey string
 }
 
-func (o* LookupTable_t)Compute(currentTemperature float64) float64 {
+func (o* LookupTable_t)Compute(currentTemperature float32) float32 {
 	val := currentTemperature
 	if val < 25 {
 		return 20

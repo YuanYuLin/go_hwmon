@@ -4,22 +4,22 @@ package algorithm
 import "math"
 
 type Pid_t struct {
-	Kp float64
-	Ki float64
-	Kd float64
-	TargetTemperature float64
+	Kp float32
+	Ki float32
+	Kd float32
+	TargetTemperature float32
 
-	err_history float64
-	err_pre float64
-	u float64
+	err_history float32
+	err_pre float32
+	u float32
 
-	ClampMin float64
-	ClampMax float64
+	ClampMin float32
+	ClampMax float32
 
 	DBKey string
 }
 
-func (o* Pid_t)Compute(currentTemperature float64) float64 {
+func (o* Pid_t)Compute(currentTemperature float32) float32 {
 	//Pid
 	err := currentTemperature - o.TargetTemperature
 	P := o.Kp * err
@@ -30,7 +30,7 @@ func (o* Pid_t)Compute(currentTemperature float64) float64 {
 	D := o.Kd * (err - o.err_pre)
 
 	val := o.u + P + I + D
-	val = math.Floor(val + 0.5)
+	val = float32(math.Floor(float64(val + 0.5)))
 
 	if val <= o.ClampMin {
 		val = o.ClampMin

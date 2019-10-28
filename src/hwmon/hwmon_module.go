@@ -127,11 +127,13 @@ func funcCpuPowerband(args map[string]interface{}) {
 func setupFansAndDevices() {
 	dev_fan := factory.CreateDeviceFan()
 
+	var defDuty float32
+	defDuty = 60.0
 	//Set Default Fans Duty
 	fanMap := []common.DeviceInfo_t {
-		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT1, Value: 60.0 },
-		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT2, Value: 60.0 },
-		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT3, Value: 60.0 },
+		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT1, Value: defDuty },
+		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT2, Value: defDuty },
+		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT3, Value: defDuty },
 	}
 	for _, obj := range fanMap {
 		fan_duty := utils.ToFloat(obj.Value)
@@ -150,13 +152,13 @@ func setupFansAndDevices() {
 		{ Entity: config.ENTITY_AMB,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT3 },
 	}
 	for _, obj := range deviceMapFan {
-		fan_instant := obj.Value.(int)
+		fan_instant := utils.ToInt(obj.Value)
 		dev_fan.SetDeviceMap(obj.Entity, obj.Instant, fan_instant)
 		/*
 		list := dev_fan.GetDeviceMap(obj.Entity, obj.Instant)
 		for _, fm := range list {
 			if fm.ValueType == config.TYPE_RSP_ERROR { // Not Found
-				fan_instant := obj.Value.(int)
+				fan_instant := utils.ToInt(obj.Value)
 				dev_fan.SetDeviceMap(obj.Entity, obj.Instant, fan_instant)
 			}
 		}
@@ -180,13 +182,13 @@ func funcFanMap(args map[string]interface{}) {
 	keys1 := getSortedKeys(map_expect_fan_duty)
 	for _, key := range keys1 {
 		obj := map_expect_fan_duty[key]
-		fmt.Printf("[%s]EID:%d, INST:%d, DUTY:%f[%s]\n", obj.ValueType, obj.Entity, obj.Instant, obj.Value, obj.Key)
+		fmt.Printf("[%d]EID:%d, INST:%d, DUTY:%f[%s]\n", obj.ValueType, obj.Entity, obj.Instant, obj.Value, obj.Key)
 		list := dev_fan.GetDeviceMap(obj.Entity, obj.Instant)
 		for _, fm := range list {
 			fmt.Printf("\tmap to fan : %d\n", fm.Value)
-			fanInstant := -1
+			fanInstant := utils.ToInt(-1)
 			if fm.ValueType != config.TYPE_RSP_ERROR {
-				fanInstant = fm.Value.(int)
+				fanInstant = utils.ToInt(fm.Value)
 			}
 			out_duty := utils.ToFloat(obj.Value)
 			dev := dev_fan.GetDutyOutput(fanInstant)
@@ -205,7 +207,7 @@ func funcFanMap(args map[string]interface{}) {
 	keys2 := getSortedKeys(fan_list)
 	for _, key := range keys2 {
 		obj := fan_list[key]
-		fmt.Printf("Fan[%d]=%f[%s-%s]\n", obj.Instant, obj.Value, key, obj.ValueType)
+		fmt.Printf("Fan[%d]=%f[%s-%d]\n", obj.Instant, obj.Value, key, obj.ValueType)
 	}
 	fmt.Printf("==END==\n")
 }
