@@ -8,19 +8,6 @@ import "config"
 import "factory"
 import "sort"
 
-func funcTest(args map[string]interface{}) {
-	dev_cpu := factory.CreateDeviceCpu()
-	list_abstemp := dev_cpu.GetListAbsTemp()
-	for _, abstemp := range list_abstemp {
-		if abstemp.ValueType == config.TYPE_RSP_ERROR {
-			continue
-		}
-		instant := abstemp.Instant
-		absval := utils.ToFloat(abstemp.Value)
-		fmt.Printf("instant:%d, val:%f\n", instant, absval)
-	}
-}
-
 func funcAmbOpenloop(args map[string]interface{}) {
 	dev_amb := factory.CreateDeviceAmb()
 	list_abstemp := dev_amb.GetListAbsTemp()
@@ -261,7 +248,6 @@ func GetModules() ([]TaskInfo){
 		{Name:"CPU_PID",	Function:funcCpuPid,		FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
 		{Name:"DIMM_Threshold",	Function:funcDimmThreshold,	FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
 		{Name:"AIC_Threshold",	Function:funcAicThreshold,	FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
-		{Name:"CPU_Test",	Function:funcTest,	FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
 	}
 	return tasks
 }
