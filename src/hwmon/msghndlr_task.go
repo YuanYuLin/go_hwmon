@@ -19,7 +19,8 @@ func (o* TaskMsgHndlr)Run() {
 			switch msg.Function {
 			case config.EXIT_APPLICATION:
 				isBreakTask = true
-				data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RSP_OK, Value:"Stop task" }
+				value := common.ValueResponse_t { Value: config.RESPONSE_OK }
+				data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RESPONSE, Value:value }
 				//res_bytes := ConvertDeviceInfoToBytes(data)
 				res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
 			default:

@@ -4,6 +4,30 @@ import "encoding/json"
 import "common"
 import "mailbox"
 
+func IsResponse(data interface{})(bool) {
+	_, ok := data.(common.DeviceInfo_t)
+	return ok
+}
+
+func ToResponse(data interface{})(common.DeviceInfo_t) {
+	res := data.(common.DeviceInfo_t)
+	return res
+}
+
+func GetHeaders(data interface{})(int32, int32, string) {
+	var entity int32
+	var instant int32
+	var key string
+	switch data.(type) {
+		case common.DeviceInfo_t:
+		req := data.(common.DeviceInfo_t)
+		key = req.Key
+		entity = req.Entity
+		instant = req.Instant
+	}
+	return entity, instant, key
+}
+
 func ToFloat(val interface{}) (float32) {
 	var result float32
 	result = -1
@@ -34,7 +58,7 @@ func ConvertBytesToDeviceInfo(bytes []byte) (common.DeviceInfo_t) {
 	return data
 }
 
-func TalkToDao(fn string, obj common.DeviceInfo_t) (common.Msg_t) {
+func TalkToDao(fn string, obj interface{}) (common.Msg_t) {
 	mb_src := mailbox.CreateMailboxTemporary()
 	mb_dst := mailbox.CreateMailboxDao()
 	req_msg := common.Msg_t { Function:fn, ChannelSrc:mb_src.Channel, ChannelDst:mb_dst.Channel, Data: obj }
@@ -46,7 +70,7 @@ func TalkToDao(fn string, obj common.DeviceInfo_t) (common.Msg_t) {
 	return res_obj
 }
 
-func TalkToHwmon(fn string, obj common.DeviceInfo_t) (common.Msg_t) {
+func TalkToHwmon(fn string, obj interface{}) (common.Msg_t) {
 	mb_src := mailbox.CreateMailboxTemporary()
 	mb_dst := mailbox.CreateMailboxHwmon()
 	req_msg := common.Msg_t { Function:fn, ChannelSrc:mb_src.Channel, ChannelDst:mb_dst.Channel, Data: obj }
@@ -58,7 +82,7 @@ func TalkToHwmon(fn string, obj common.DeviceInfo_t) (common.Msg_t) {
 	return res_obj
 }
 
-func TalkToRest(fn string, obj common.DeviceInfo_t) (common.Msg_t) {
+func TalkToRest(fn string, obj interface{}) (common.Msg_t) {
 	mb_src := mailbox.CreateMailboxTemporary()
 	mb_dst := mailbox.CreateMailboxRest()
 	req_msg := common.Msg_t { Function:fn, ChannelSrc:mb_src.Channel, ChannelDst:mb_dst.Channel, Data: obj }
@@ -70,7 +94,7 @@ func TalkToRest(fn string, obj common.DeviceInfo_t) (common.Msg_t) {
 	return res_obj
 }
 
-func TalkToMsghndlr(fn string, obj common.DeviceInfo_t) (common.Msg_t) {
+func TalkToMsghndlr(fn string, obj interface{}) (common.Msg_t) {
 	mb_src := mailbox.CreateMailboxTemporary()
 	req_msg := common.Msg_t { Function:fn, ChannelSrc:mb_src.Channel, ChannelDst:nil, Data: obj }
 

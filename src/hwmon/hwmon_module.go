@@ -12,7 +12,7 @@ func funcAmbOpenloop(args map[string]interface{}) {
 	dev_amb := factory.CreateDeviceAmb()
 	list_abstemp := dev_amb.GetListAbsTemp()
 	for _, abstemp := range list_abstemp {
-		if abstemp.ValueType == config.TYPE_RSP_ERROR {
+		if abstemp.ValueType == config.TYPE_RESPONSE {
 			continue
 		}
 		instant := abstemp.Instant
@@ -29,7 +29,7 @@ func funcAicThreshold(args map[string]interface{}) {
 	dev_aic := factory.CreateDeviceAic()
 	list_abstemp := dev_aic.GetListAbsTemp()
 	for _, abstemp := range list_abstemp {
-		if abstemp.ValueType == config.TYPE_RSP_ERROR {
+		if abstemp.ValueType == config.TYPE_RESPONSE {
 			continue
 		}
 		instant := abstemp.Instant
@@ -46,7 +46,7 @@ func funcDimmThreshold(args map[string]interface{}) {
 	dev_dimm := factory.CreateDeviceDimm()
 	list_abstemp := dev_dimm.GetListAbsTemp()
 	for _, abstemp := range list_abstemp {
-		if abstemp.ValueType == config.TYPE_RSP_ERROR {
+		if abstemp.ValueType == config.TYPE_RESPONSE {
 			continue
 		}
 		instant := abstemp.Instant
@@ -63,7 +63,7 @@ func funcCpuPid(args map[string]interface{}) {
 	dev_cpu := factory.CreateDeviceCpu()
 	list_reltemp := dev_cpu.GetListRelTemp()
 	for _, reltemp := range list_reltemp {
-		if reltemp.ValueType == config.TYPE_RSP_ERROR {
+		if reltemp.ValueType == config.TYPE_RESPONSE {
 			continue
 		}
 		instant := reltemp.Instant
@@ -80,7 +80,7 @@ func funcCpuThreshold(args map[string]interface{}) {
 	dev_cpu := factory.CreateDeviceCpu()
 	list_reltemp := dev_cpu.GetListRelTemp()
 	for _, reltemp := range list_reltemp {
-		if reltemp.ValueType == config.TYPE_RSP_ERROR {
+		if reltemp.ValueType == config.TYPE_RESPONSE {
 			continue
 		}
 		instant := reltemp.Instant
@@ -98,11 +98,11 @@ func funcCpuPowerband(args map[string]interface{}) {
 	list_ap := dev_cpu.GetListAveragePower()
 
 	for _, ap := range list_ap {
-		if ap.ValueType == config.TYPE_RSP_ERROR {
+		if ap.ValueType == config.TYPE_RESPONSE {
 			continue
 		}
 		mp := dev_cpu.GetMaxPower(ap.Instant)
-		if mp.ValueType == config.TYPE_RSP_ERROR {
+		if mp.ValueType == config.TYPE_RESPONSE {
 			continue
 		}
 		val_ap := utils.ToFloat(ap.Value)
@@ -187,13 +187,13 @@ func funcFanMap(args map[string]interface{}) {
 		for _, fm := range list {
 			fmt.Printf("\tmap to fan : %d\n", fm.Value)
 			fanInstant := utils.ToInt(-1)
-			if fm.ValueType != config.TYPE_RSP_ERROR {
+			if fm.ValueType != config.TYPE_RESPONSE {
 				fanInstant = utils.ToInt(fm.Value)
 			}
 			out_duty := utils.ToFloat(obj.Value)
 			dev := dev_fan.GetDutyOutput(fanInstant)
 			db_duty := utils.ToFloat(dev.Value)
-			if (dev.ValueType == config.TYPE_RSP_ERROR) || (dev.ValueType == config.TYPE_INITFANDUTY) {
+			if (dev.ValueType == config.TYPE_RESPONSE) || (dev.ValueType == config.TYPE_INITFANDUTY) {
 				dev_fan.SetDutyOutput(fanInstant, out_duty)
 			} else {
 				if db_duty < out_duty {

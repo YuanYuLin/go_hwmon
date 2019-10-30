@@ -144,7 +144,8 @@ func ExitMain(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
+    value := common.ValueRequest_t{Value: "Exit Main"}
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST, Value:value }
     res_msg := utils.TalkToHwmon(config.EXIT_APPLICATION, data)
     //obj := ConvertBytesToDeviceInfo(res_msg.Data)
     obj := res_msg.Data
@@ -157,7 +158,8 @@ func EnableOutOfBandInterface(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
+    value := common.ValueRequest_t{Value: "Enable out of band interface"}
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST, Value:value }
     res_msg := utils.TalkToHwmon(config.ENABLE_OUTOFBAND_INTERFACE, data)
     //obj := ConvertBytesToDeviceInfo(res_msg.Data)
     obj := res_msg.Data
@@ -170,7 +172,8 @@ func DisableOutOfBandInterface(w http.ResponseWriter, r* http.Request) {
     if err != nil {
         ops_log.Debug(0x1, "Set Error %s", err)
     }
-    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_CMD, Value:0 }
+    value := common.ValueRequest_t{Value: "Disable out of band interface"}
+    data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST, Value:value }
     res_msg := utils.TalkToHwmon(config.DISABLE_OUTOFBAND_INTERFACE, data)
     //obj := ConvertBytesToDeviceInfo(res_msg.Data)
     obj := res_msg.Data
