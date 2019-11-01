@@ -11,7 +11,7 @@ def request_list(hostname, out_format):
     url='http://%s/api/v1/hwmon/set/device/maxtemp' % hostname
     utils.response_output(out_format, utils.http_request(url, json))
 
-    json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, 25.12)
+    json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, 30.12)
     url='http://%s/api/v1/hwmon/set/device/abstemp' % hostname
     utils.response_output(out_format, utils.http_request(url, json))
 

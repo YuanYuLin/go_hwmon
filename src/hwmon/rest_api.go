@@ -6,7 +6,6 @@ import "config"
 import "net/http"
 import "ops_log"
 import "io/ioutil"
-import "fmt"
 
 func GetDeviceMaxTemp(w http.ResponseWriter, r* http.Request) {
     b, err := ioutil.ReadAll(r.Body)
@@ -39,8 +38,6 @@ func GetDeviceAbsTemp(w http.ResponseWriter, r* http.Request) {
     }
 
     data := utils.ConvertBytesToDeviceInfo(b)
-    fmt.Println(data.Entity)
-    fmt.Println(data.Instant)
     obj := utils.PullObjDeviceAbsTemp(data.Entity, data.Instant)
     responseWithJsonV1(w, http.StatusOK, obj)
 }

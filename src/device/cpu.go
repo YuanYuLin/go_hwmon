@@ -8,7 +8,7 @@ import "utils"
 type Cpu_t struct {
 	Entity int32
 }
-
+/*
 func (o *Cpu_t)GetListAbsTemp() (map[string]common.DeviceInfo_t) {
 	obj := utils.PullObjListDeviceAbsTemp(o.Entity)
 	return obj
@@ -23,7 +23,7 @@ func (o *Cpu_t)SetAbsTemp(instant int32, value float32) (common.DeviceInfo_t) {
 	obj := utils.PushObjDeviceAbsTemp(o.Entity, instant, value)
 	return obj
 }
-
+*/
 func (o *Cpu_t)GetListRelTemp() (map[string]common.DeviceInfo_t) {
 	obj := utils.PullObjListDeviceRelTemp(o.Entity)
 	return obj

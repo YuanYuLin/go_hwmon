@@ -49,7 +49,11 @@ func get_record(msg common.Msg_t, db map[string]common.DeviceInfo_t) (common.Msg
 func set_record(msg common.Msg_t, db map[string]common.DeviceInfo_t) (common.Msg_t){
 	var res_msg common.Msg_t
 	entity, instant, key := get_key(msg.Data)
-	db[key] = (msg.Data).(common.DeviceInfo_t)
+	ok, dev_info := PreSetRecord(key, (msg.Data).(common.DeviceInfo_t))
+	if ok {
+		db[key] = dev_info//(msg.Data).(common.DeviceInfo_t)
+	}
+	
 	value := common.ValueResponse_t { Value: config.RESPONSE_OK }
 	data := common.DeviceInfo_t { Entity:entity, Instant:instant, Key:key, ValueType:config.TYPE_RESPONSE, Value:value }
 	res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
