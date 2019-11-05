@@ -3,9 +3,16 @@ package config
 var IN_SERVICE_PORT = "localhost:8088"
 var OUT_SERVICE_PORT = "0.0.0.0:8080"
 /*
- *
+ * GET -> 
+ *   Successed	: TYPE_xxxx
+ *   Failed	: TYPE_REQUEST_ERROR
+ * SET ->
+ *   Successed	: TYPE_REQUEST_OK
+ *   Failed	: TYPE_REQUEST_ERROR
+ * COMMAND ->
+ *   Successed	: TYPE_REQUEST_OK
+ *   Failed	: TYPE_REQUEST_ERROR
  */
-
 const TYPE_OBJECT		int32 = 0x1
 const TYPE_TEMPERATURE		int32 = 0x2
 const TYPE_AVERAGEPOWER		int32 = 0x3
@@ -15,11 +22,15 @@ const TYPE_INITFANDUTY		int32 = 0x5
 const TYPE_FANDUTY		int32 = 0x6
 const TYPE_DEVICEFANMAP		int32 = 0x7
 // Used in "SET" response packet
-const TYPE_RESPONSE		int32 = 0xF0
-const TYPE_REQUEST			int32 = 0x80
+const TYPE_REQUEST		int32 = 0x80
 
-const RESPONSE_OK			int32 = 0x0
-const RESPONSE_NOT_FOUND	int32 = 0x1 
+const TYPE_REQUEST_OK		int32 = 0x90
+const REQUEST_OK		int32 = 0x0
+
+const TYPE_REQUEST_ERROR	int32 = 0xF0
+const REQUEST_ERROR_NOT_FOUND	int32 = 0x1
+const REQUEST_ERROR_NOT_SET	int32 = 0x2
+
 /*
 const TYPE_OBJECT		string = "object"
 const TYPE_TEMPERATURE		string = "temperature"

@@ -38,8 +38,13 @@ func GetDeviceAbsTemp(w http.ResponseWriter, r* http.Request) {
     }
 
     data := utils.ConvertBytesToDeviceInfo(b)
-    obj := utils.PullObjDeviceAbsTemp(data.Entity, data.Instant)
-    responseWithJsonV1(w, http.StatusOK, obj)
+    if data.Instant == -1 {
+        obj := utils.PullObjListDeviceAbsTemp(data.Entity)
+        responseWithJsonV1(w, http.StatusOK, obj)
+    } else {
+        obj := utils.PullObjDeviceAbsTemp(data.Entity, data.Instant)
+        responseWithJsonV1(w, http.StatusOK, obj)
+    }
 }
 func GetDeviceRelTemp(w http.ResponseWriter, r* http.Request) {
     b, err := ioutil.ReadAll(r.Body)
@@ -49,8 +54,13 @@ func GetDeviceRelTemp(w http.ResponseWriter, r* http.Request) {
     }
 
     data := utils.ConvertBytesToDeviceInfo(b)
-    obj := utils.PullObjDeviceRelTemp(data.Entity, data.Instant)
-    responseWithJsonV1(w, http.StatusOK, obj)
+    if data.Instant == -1 {
+        obj := utils.PullObjListDeviceRelTemp(data.Entity)
+        responseWithJsonV1(w, http.StatusOK, obj)
+    } else {
+        obj := utils.PullObjDeviceRelTemp(data.Entity, data.Instant)
+        responseWithJsonV1(w, http.StatusOK, obj)
+    }
 }
 
 func SetDeviceAbsTemp(w http.ResponseWriter, r* http.Request) {
@@ -121,6 +131,18 @@ func SetDeviceMaxPower(w http.ResponseWriter, r* http.Request) {
     data := utils.ConvertBytesToDeviceInfo(b)
     val := utils.ToFloat(data.Value)
     obj := utils.PushObjDeviceMaxPower(data.Entity, data.Instant, val)
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+
+func GetMapDeviceFan(w http.ResponseWriter, r* http.Request) {
+    b, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+
+    data := utils.ConvertBytesToDeviceInfo(b)
+    obj := utils.PullObjDeviceFanMap(data.Entity, data.Instant)
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
@@ -202,6 +224,7 @@ var rest_api_list = []rest_api_t {
     /*
      *
      */
+    {"/api/v1/hwmon/get/device/fanmap",		GetMapDeviceFan},
     {"/api/v1/hwmon/get/map/alldevicefan",	GetMapAllDeviceFan},
     {"/api/v1/hwmon/get/map/allfandutyout",	GetMapAllFanDutyOut},
     {"/api/v1/hwmon/get/map/allexpectduty",	GetMapAllDevicesExpectFanDuty},

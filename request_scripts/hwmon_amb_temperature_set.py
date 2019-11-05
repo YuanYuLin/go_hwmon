@@ -4,14 +4,14 @@ import sys
 import utils
 
 def request_list(hostname, out_format):
-    entity = utils.ENTITY_AMB
+    entity = utils.ENTITY_EXTERNAL_ENVIROMENT
     instant = 1
 
     json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, 100.0)
     url='http://%s/api/v1/hwmon/set/device/maxtemp' % hostname
     utils.response_output(out_format, utils.http_request(url, json))
 
-    json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, 30.12)
+    json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, 20.12)
     url='http://%s/api/v1/hwmon/set/device/abstemp' % hostname
     utils.response_output(out_format, utils.http_request(url, json))
 

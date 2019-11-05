@@ -12,7 +12,7 @@ func funcAmbOpenloop(args map[string]interface{}) {
 	dev_amb := factory.CreateDeviceAmb()
 	list_abstemp := dev_amb.GetListAbsTemp()
 	for _, abstemp := range list_abstemp {
-		if abstemp.ValueType == config.TYPE_RESPONSE {
+		if abstemp.ValueType == config.TYPE_REQUEST_ERROR {
 			continue
 		}
 		instant := abstemp.Instant
@@ -29,7 +29,7 @@ func funcAicThreshold(args map[string]interface{}) {
 	dev_aic := factory.CreateDeviceAic()
 	list_abstemp := dev_aic.GetListAbsTemp()
 	for _, abstemp := range list_abstemp {
-		if abstemp.ValueType == config.TYPE_RESPONSE {
+		if abstemp.ValueType == config.TYPE_REQUEST_ERROR {
 			continue
 		}
 		instant := abstemp.Instant
@@ -46,7 +46,7 @@ func funcDimmThreshold(args map[string]interface{}) {
 	dev_dimm := factory.CreateDeviceDimm()
 	list_abstemp := dev_dimm.GetListAbsTemp()
 	for _, abstemp := range list_abstemp {
-		if abstemp.ValueType == config.TYPE_RESPONSE {
+		if abstemp.ValueType == config.TYPE_REQUEST_ERROR {
 			continue
 		}
 		instant := abstemp.Instant
@@ -63,7 +63,7 @@ func funcCpuPid(args map[string]interface{}) {
 	dev_cpu := factory.CreateDeviceCpu()
 	list_reltemp := dev_cpu.GetListRelTemp()
 	for _, reltemp := range list_reltemp {
-		if reltemp.ValueType == config.TYPE_RESPONSE {
+		if reltemp.ValueType == config.TYPE_REQUEST_ERROR {
 			continue
 		}
 		instant := reltemp.Instant
@@ -80,7 +80,7 @@ func funcCpuThreshold(args map[string]interface{}) {
 	dev_cpu := factory.CreateDeviceCpu()
 	list_reltemp := dev_cpu.GetListRelTemp()
 	for _, reltemp := range list_reltemp {
-		if reltemp.ValueType == config.TYPE_RESPONSE {
+		if reltemp.ValueType == config.TYPE_REQUEST_ERROR {
 			continue
 		}
 		instant := reltemp.Instant
@@ -98,11 +98,11 @@ func funcCpuPowerband(args map[string]interface{}) {
 	list_ap := dev_cpu.GetListAveragePower()
 
 	for _, ap := range list_ap {
-		if ap.ValueType == config.TYPE_RESPONSE {
+		if ap.ValueType == config.TYPE_REQUEST_ERROR {
 			continue
 		}
 		mp := dev_cpu.GetMaxPower(ap.Instant)
-		if mp.ValueType == config.TYPE_RESPONSE {
+		if mp.ValueType == config.TYPE_REQUEST_ERROR {
 			continue
 		}
 		val_ap := utils.ToFloat(ap.Value)
@@ -126,43 +126,33 @@ func funcCpuPowerband(args map[string]interface{}) {
 
 func setupFansAndDevices() {
 	dev_fan := factory.CreateDeviceFan()
-
-	var defDuty float32
-	defDuty = 60.0
-	//Set Default Fans Duty
+	var defDuty float32 = 60.0
 	fanMap := []common.DeviceInfo_t {
-		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT1, Value: defDuty },
-		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT2, Value: defDuty },
-		{ Entity: config.ENTITY_FAN, Instant: config.FAN_INSTANT3, Value: defDuty },
+		{ Entity: config.ENTITY_FAN_COOLING, Instant: config.FAN_INSTANT1, Value: defDuty },
+		{ Entity: config.ENTITY_FAN_COOLING, Instant: config.FAN_INSTANT2, Value: defDuty },
+		{ Entity: config.ENTITY_FAN_COOLING, Instant: config.FAN_INSTANT3, Value: defDuty },
 	}
+
+	//Set Default Fans Duty
 	for _, obj := range fanMap {
 		fan_duty := utils.ToFloat(obj.Value)
 		dev_fan.InitDutyOutput(obj.Instant, fan_duty)
 	}
 
-	//Set Devices and Fans Map
 	deviceMapFan := []common.DeviceInfo_t {
-		{ Entity: config.ENTITY_CPU,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT1 },
-		{ Entity: config.ENTITY_DIMM,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT1 },
-		{ Entity: config.ENTITY_AIC,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT2 },
-		{ Entity: config.ENTITY_CPU,	Instant: config.DEV_INSTANT2,	Value: config.FAN_INSTANT3 },
-		{ Entity: config.ENTITY_DIMM,	Instant: config.DEV_INSTANT2,	Value: config.FAN_INSTANT3 },
-		{ Entity: config.ENTITY_AMB,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT1 },
-		{ Entity: config.ENTITY_AMB,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT2 },
-		{ Entity: config.ENTITY_AMB,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT3 },
+		{ Entity: config.ENTITY_PROCESSOR,		Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT1 },
+		{ Entity: config.ENTITY_MEMORY_DEVICE,		Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT1 },
+		{ Entity: config.ENTITY_ADD_IN_CARD,		Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT2 },
+		{ Entity: config.ENTITY_PROCESSOR,		Instant: config.DEV_INSTANT2,	Value: config.FAN_INSTANT3 },
+		{ Entity: config.ENTITY_MEMORY_DEVICE,		Instant: config.DEV_INSTANT2,	Value: config.FAN_INSTANT3 },
+		{ Entity: config.ENTITY_EXTERNAL_ENVIROMENT,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT1 },
+		{ Entity: config.ENTITY_EXTERNAL_ENVIROMENT,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT2 },
+		{ Entity: config.ENTITY_EXTERNAL_ENVIROMENT,	Instant: config.DEV_INSTANT1,	Value: config.FAN_INSTANT3 },
 	}
+	//Set Devices and Fans Map
 	for _, obj := range deviceMapFan {
 		fan_instant := utils.ToInt(obj.Value)
 		dev_fan.SetDeviceMap(obj.Entity, obj.Instant, fan_instant)
-		/*
-		list := dev_fan.GetDeviceMap(obj.Entity, obj.Instant)
-		for _, fm := range list {
-			if fm.ValueType == config.TYPE_RSP_ERROR { // Not Found
-				fan_instant := utils.ToInt(obj.Value)
-				dev_fan.SetDeviceMap(obj.Entity, obj.Instant, fan_instant)
-			}
-		}
-		*/
 	}
 }
 
@@ -175,40 +165,56 @@ func getSortedKeys(list map[string]common.DeviceInfo_t) ([]string) {
 	return keys
 }
 
-func funcFanMap(args map[string]interface{}) {
+func compareAndGetFanDuty(device_list map[string]common.DeviceInfo_t)(map[int32]float32) {
 	dev_fan := factory.CreateDeviceFan()
-	map_expect_fan_duty := dev_fan.GetAllDevicesExpectFanDuty()
-	fmt.Printf("==BEGIN==\n")
-	keys1 := getSortedKeys(map_expect_fan_duty)
+	fan_list := make(map[int32]float32)
+	fanMap := dev_fan.GetAllDutyOutput()
+	for _, obj := range fanMap {
+		fan_list[obj.Instant] = -1.0
+	}
+	keys1 := getSortedKeys(device_list)
 	for _, key := range keys1 {
-		obj := map_expect_fan_duty[key]
+		obj := device_list[key]
 		fmt.Printf("[%d]EID:%d, INST:%d, DUTY:%f[%s]\n", obj.ValueType, obj.Entity, obj.Instant, obj.Value, obj.Key)
-		list := dev_fan.GetDeviceMap(obj.Entity, obj.Instant)
-		for _, fm := range list {
+		device_list := dev_fan.GetDeviceMap(obj.Entity, obj.Instant)
+		for _, fm := range device_list {
 			fmt.Printf("\tmap to fan : %d\n", fm.Value)
 			fanInstant := utils.ToInt(-1)
-			if fm.ValueType != config.TYPE_RESPONSE {
+			if fm.ValueType != config.TYPE_REQUEST_ERROR {
 				fanInstant = utils.ToInt(fm.Value)
 			}
 			out_duty := utils.ToFloat(obj.Value)
-			dev := dev_fan.GetDutyOutput(fanInstant)
-			db_duty := utils.ToFloat(dev.Value)
-			if (dev.ValueType == config.TYPE_RESPONSE) || (dev.ValueType == config.TYPE_INITFANDUTY) {
-				dev_fan.SetDutyOutput(fanInstant, out_duty)
-			} else {
-				if db_duty < out_duty {
-					dev_fan.SetDutyOutput(fanInstant, out_duty)
-				}
+			if fan_list[fanInstant] < out_duty {
+				fan_list[fanInstant] = out_duty
 			}
 		}
 	}
-	fmt.Printf("==Result==\n")
+	return fan_list
+}
+
+func showFanDuty() {
+	dev_fan := factory.CreateDeviceFan()
 	fan_list := dev_fan.GetAllDutyOutput()
 	keys2 := getSortedKeys(fan_list)
 	for _, key := range keys2 {
 		obj := fan_list[key]
 		fmt.Printf("Fan[%d]=%f[%s-%d]\n", obj.Instant, obj.Value, key, obj.ValueType)
 	}
+}
+
+func funcFanMap(args map[string]interface{}) {
+	dev_fan := factory.CreateDeviceFan()
+	map_expect_fan_duty := dev_fan.GetAllDevicesExpectFanDuty()
+	fmt.Printf("==BEGIN==\n")
+	fan_list := compareAndGetFanDuty(map_expect_fan_duty)
+	for idx := range fan_list {
+		if fan_list[idx] < 0 {
+			continue
+		}
+		dev_fan.SetDutyOutput(idx, fan_list[idx])
+	}
+	fmt.Printf("==Result==\n")
+	showFanDuty()
 	fmt.Printf("==END==\n")
 }
 

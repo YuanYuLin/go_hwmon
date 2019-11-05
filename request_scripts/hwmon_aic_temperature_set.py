@@ -4,7 +4,7 @@ import sys
 import utils
 
 def request_list(hostname, out_format):
-    entity = utils.ENTITY_AIC
+    entity = utils.ENTITY_ADD_IN_CARD
     instant = 1
 
     json = '{"entity":%d, "instant":%d, "value":%f}' % (entity, instant, 100.0)

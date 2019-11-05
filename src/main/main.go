@@ -51,17 +51,17 @@ func main() {
 		msg_func := msg.Function
 		switch msg_func {
 		case config.EXIT_APPLICATION:
-			value := common.ValueResponse_t{Value: config.RESPONSE_OK}
-			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_RESPONSE, Value: value}
+			value := common.ValueResponse_t{Value: config.REQUEST_OK}
+			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_REQUEST_OK, Value: value}
 		case config.DISABLE_OUTOFBAND_INTERFACE:
-			value := common.ValueResponse_t{Value: config.RESPONSE_OK}
-			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_RESPONSE, Value: value}
+			value := common.ValueResponse_t{Value: config.REQUEST_OK}
+			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_REQUEST_OK, Value: value}
 		case config.ENABLE_OUTOFBAND_INTERFACE:
-			value := common.ValueResponse_t{Value: config.RESPONSE_OK}
-			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_RESPONSE, Value: value}
+			value := common.ValueResponse_t{Value: config.REQUEST_OK}
+			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_REQUEST_OK, Value: value}
 		default:
-			value := common.ValueResponse_t{Value: config.RESPONSE_NOT_FOUND}
-			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_RESPONSE, Value: value}
+			value := common.ValueResponse_t{Value: config.REQUEST_ERROR_NOT_FOUND}
+			response = common.DeviceInfo_t{Entity: 0, Instant: 0, ValueType: config.TYPE_REQUEST_ERROR, Value: value}
 		}
 		var res_msg common.Msg_t
 		//res_bytes := hwmon.ConvertDeviceInfoToBytes(data)

@@ -39,6 +39,15 @@ func (o *Fan_t)GetDeviceMap(dev_entity int32, dev_instant int32) (map[string]com
 	return obj
 }
 
+func (o *Fan_t)GetAllDeviceMap() (map[string]common.DeviceInfo_t) {
+	obj := utils.PullObjListDeviceFanMap()
+	return obj
+}
+func (o *Fan_t)GetDeviceExpectFanDuty(dev_entity int32, dev_instant int32) (common.DeviceInfo_t) {
+	obj := utils.PullObjDeviceExpectFanDuty(dev_entity, dev_instant)
+	return obj
+}
+
 func (o *Fan_t)GetAllDevicesExpectFanDuty() (map[string]common.DeviceInfo_t) {
 	obj_list := utils.PullObjListDevicesExpectFanDuty()
 	return obj_list

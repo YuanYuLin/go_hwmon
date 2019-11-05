@@ -45,7 +45,7 @@ func PushObj(key string, val interface{}) (bool){
 	if ok {
 		if rsp.Value == 0 {
 			return true
-		} 
+		}
 	}
 	return false
 }
@@ -198,7 +198,7 @@ func InitObjDeviceFanDutyOutput(entity int32, instant int32, duty float32) (comm
 }
 // GET record list
 func PullObjListDeviceFanDutyOutput() (map[string]common.DeviceInfo_t) {
-	data := common.DeviceInfo_t { Entity:config.ENTITY_FAN, Instant:-1, ValueType:config.TYPE_FANDUTY, Value:0 }
+	data := common.DeviceInfo_t { Entity:-1, Instant:-1, ValueType:config.TYPE_FANDUTY, Value:0 }
 	data.Key = ""
 	msg := TalkToDao(config.GET_ALL_FAN_DUTY_OUTPUT, data)
 	obj := (msg.Data).(map[string]common.DeviceInfo_t)
@@ -250,5 +250,13 @@ func PullObjListDevicesExpectFanDuty() (map[string]common.DeviceInfo_t) {
 	msg := TalkToDao(config.GET_ALL_EXPECT_FAN_DUTY, data)
 	obj_map := (msg.Data).(map[string]common.DeviceInfo_t)
 	return obj_map
+}
+
+func PullObjDeviceExpectFanDuty(entity int32, instant int32) (common.DeviceInfo_t) {
+	data := common.DeviceInfo_t { Entity: entity, Instant: instant, ValueType: config.TYPE_FANDUTY, Value: 0 }
+	data.Key = createKeyByTEI(data.ValueType, data.Entity, data.Instant)
+	msg := TalkToDao(config.GET_EXPECT_FAN_DUTY, data)
+	obj := (msg.Data).(common.DeviceInfo_t)
+	return obj
 }
 

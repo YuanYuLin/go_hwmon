@@ -4,7 +4,7 @@ import sys
 import utils
 
 def request_list(hostname, out_format):
-    entity = utils.ENTITY_EXTERNAL_ENVIROMENT
+    entity = utils.ENTITY_MEMORY_DEVICE
     instant = 1
 
     json = '{"entity":%d, "instant":%d}' % (entity, instant)

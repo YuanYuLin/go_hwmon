@@ -76,7 +76,8 @@ func (o* TaskRest)Run() {
 				is_kill_srv2 = true
 			}
 			isBreakTask = true
-			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RESPONSE, Value:"Stop task" }
+			value := common.ValueResponse_t { Value: config.REQUEST_OK }
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST_OK, Value:value }
 		case config.ENABLE_OUTOFBAND_INTERFACE:
 			if !is_started_srv2 {
 				go func() {
@@ -88,19 +89,19 @@ func (o* TaskRest)Run() {
 			}
 			is_started_srv2 = true
 			is_kill_srv2 = false
-			value := common.ValueResponse_t { Value: config.RESPONSE_OK }
-			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RESPONSE, Value:value }
+			value := common.ValueResponse_t { Value: config.REQUEST_OK }
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST_OK, Value:value }
 		case config.DISABLE_OUTOFBAND_INTERFACE:
 			if is_started_srv2 {
 				is_started_srv2 = false
 				is_kill_srv2 = true
 				fmt.Printf("Disable out of band interface\n")
 			}
-			value := common.ValueResponse_t { Value: config.RESPONSE_OK }
-			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RESPONSE, Value:value }
+			value := common.ValueResponse_t { Value: config.REQUEST_OK }
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST_OK, Value:value }
 		default:
-			value := common.ValueResponse_t { Value: config.RESPONSE_NOT_FOUND }
-			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RESPONSE, Value:value }
+			value := common.ValueResponse_t { Value: config.REQUEST_ERROR_NOT_FOUND }
+			data = common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST_ERROR, Value:value }
 		}
 		//res_bytes := ConvertDeviceInfoToBytes(data)
 		res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)

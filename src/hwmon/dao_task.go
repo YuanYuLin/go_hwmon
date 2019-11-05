@@ -18,7 +18,7 @@ type TaskDao struct {
 	db_fan_output		map[string]common.DeviceInfo_t
 }
 
-func get_key(data interface{}) (int32, int32, string) {
+func get_hdr(data interface{}) (int32, int32, string) {
 	var entity int32
 	var instant int32
 	var key string
@@ -34,35 +34,38 @@ func get_key(data interface{}) (int32, int32, string) {
 
 func get_record(msg common.Msg_t, db map[string]common.DeviceInfo_t) (common.Msg_t) {
 	var res_msg common.Msg_t
-	entity, instant, key := get_key(msg.Data)
-	dev, ok := db[key]
-	if ok {
-		res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, dev)
-	} else {
-		value := common.ValueResponse_t { Value: config.RESPONSE_NOT_FOUND }
-		data := common.DeviceInfo_t { Entity:entity, Instant:instant, Key: key, ValueType:config.TYPE_RESPONSE, Value:value }
-		res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
+	PreGetRecord((msg.Data).(common.DeviceInfo_t))
+	entity, instant, key := get_hdr(msg.Data)
+	data, ok := db[key]
+	if !ok {
+		value := common.ValueResponse_t { Value: config.REQUEST_ERROR_NOT_FOUND }
+		data = common.DeviceInfo_t { Entity:entity, Instant:instant, Key: key, ValueType:config.TYPE_REQUEST_ERROR, Value:value }
 	}
+	data = PostGetRecord(ok, data)
+	res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
 
 	return res_msg
 }
 func set_record(msg common.Msg_t, db map[string]common.DeviceInfo_t) (common.Msg_t){
 	var res_msg common.Msg_t
-	entity, instant, key := get_key(msg.Data)
-	ok, dev_info := PreSetRecord(key, (msg.Data).(common.DeviceInfo_t))
+	ok, dev_info := PreSetRecord((msg.Data).(common.DeviceInfo_t))
+	entity, instant, key := get_hdr(dev_info)
+	data := dev_info
 	if ok {
 		db[key] = dev_info//(msg.Data).(common.DeviceInfo_t)
+	} else {
+		value := common.ValueResponse_t { Value: config.REQUEST_ERROR_NOT_SET }
+		data = common.DeviceInfo_t { Entity:entity, Instant:instant, Key:key, ValueType:config.TYPE_REQUEST_ERROR, Value:value }
 	}
-	
-	value := common.ValueResponse_t { Value: config.RESPONSE_OK }
-	data := common.DeviceInfo_t { Entity:entity, Instant:instant, Key:key, ValueType:config.TYPE_RESPONSE, Value:value }
+	PostSetRecord(ok, dev_info)
+
 	res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
 	return res_msg
 }
 
 func get_records(msg common.Msg_t, db map[string]common.DeviceInfo_t) (common.Msg_t){
 	list := make(map[string]common.DeviceInfo_t)
-	_, _, keypart := get_key(msg.Data)
+	_, _, keypart := get_hdr(msg.Data)
 	for key, dev := range db {
 		if strings.Contains(key, keypart) {
 			list[key]=dev
@@ -82,7 +85,7 @@ func (o* TaskDao)Run() {
 	o.db_expectfanduty	= make(map[string]common.DeviceInfo_t)
 	o.db_device_fan_map	= make(map[string]common.DeviceInfo_t)
 	o.db_fan_output		= make(map[string]common.DeviceInfo_t)
-	
+
 	mb_dao := mailbox.CreateMailboxDao()
 	var res_msg common.Msg_t
 	isBreakTask := false
@@ -149,13 +152,13 @@ func (o* TaskDao)Run() {
 
 		case config.EXIT_APPLICATION:
 			isBreakTask = true
-			value := common.ValueResponse_t { Value : config.RESPONSE_OK }
-			data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_RESPONSE, Value:value }
+			value := common.ValueResponse_t { Value : config.REQUEST_OK }
+			data := common.DeviceInfo_t { Entity:0, Instant:0, ValueType:config.TYPE_REQUEST_OK, Value:value }
 			res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
 		default :
-			entity, instant, key := get_key(msg.Data)
-			value := common.ValueResponse_t { Value : config.RESPONSE_NOT_FOUND }
-			data := common.DeviceInfo_t { Entity:entity, Instant:instant, Key: key, ValueType:config.TYPE_RESPONSE, Value:value }
+			entity, instant, key := get_hdr(msg.Data)
+			value := common.ValueResponse_t { Value : config.REQUEST_ERROR_NOT_FOUND }
+			data := common.DeviceInfo_t { Entity:entity, Instant:instant, Key: key, ValueType:config.TYPE_REQUEST_ERROR, Value:value }
 			res_msg = mailbox.WrapMsg(msg.Function, msg.ChannelSrc, msg.ChannelDst, data)
 		}
 		msg.ChannelDst <- res_msg

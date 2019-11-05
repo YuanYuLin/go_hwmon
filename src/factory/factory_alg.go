@@ -16,7 +16,7 @@ func CreateAlgorithmPid(key string) (algorithm.Pid_t) {
 
 		obj.ClampMin = 0
 		obj.ClampMax = 100
-		obj.TargetTemperature = 60
+		obj.TargetTemperature = -20
 		obj.DBKey = key
 	}
 	return obj

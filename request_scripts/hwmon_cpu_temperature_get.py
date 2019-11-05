@@ -4,7 +4,7 @@ import sys
 import utils
 
 def request_list(hostname, out_format):
-    entity = utils.ENTITY_CPU
+    entity = utils.ENTITY_PROCESSOR
     instant = 1
 
     json = '{"entity":%d, "instant":%d}' % (entity, instant)
