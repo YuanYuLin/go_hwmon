@@ -248,7 +248,7 @@ func GetModules() ([]TaskInfo){
 
 	tasks := []TaskInfo {
 		{Name:"AMB_Openloop",	Function:funcAmbOpenloop,	FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
-		{Name:"CPU_Threshold",	Function:funcCpuThreshold,	FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
+		//{Name:"CPU_Threshold",	Function:funcCpuThreshold,	FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
 		{Name:"FAN_Map",	Function:funcFanMap,		FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
 		{Name:"CPU_Powerband",	Function:funcCpuPowerband,	FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
 		{Name:"CPU_PID",	Function:funcCpuPid,		FunctionExit:false,	FunctionStatus:FUNC_STAT_INIT},
