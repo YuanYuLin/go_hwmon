@@ -46,3 +46,9 @@ type ValueRequest_t struct {
 type ValueResponse_t struct {
     Value       int32		`json:"value"`
 }
+
+type ValueCpuInfo_t struct {
+    MaxTdp	int32		`json:"maxtdp"`
+    CoreNum	int32		`json:"cores"`
+    Identity	uint32		`json:"id"`
+}

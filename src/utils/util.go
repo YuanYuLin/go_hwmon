@@ -58,6 +58,13 @@ func ConvertBytesToDeviceInfo(bytes []byte) (common.DeviceInfo_t) {
 	return data
 }
 
+func ConvertValueToCpuInfo(value_type int32, val interface{}) (common.ValueCpuInfo_t) {
+	var data common.ValueCpuInfo_t
+	bytes, _ := json.Marshal(val)
+	json.Unmarshal(bytes, &data)
+	return data
+}
+
 func TalkToDao(fn string, obj interface{}) (common.Msg_t) {
 	mb_src := mailbox.CreateMailboxTemporary()
 	mb_dst := mailbox.CreateMailboxDao()

@@ -7,15 +7,16 @@ import "config"
 import "fmt"
 
 type TaskDao struct {
-	db_maxtemp			map[string]common.DeviceInfo_t
-	db_abstemp			map[string]common.DeviceInfo_t
-	db_reltemp			map[string]common.DeviceInfo_t
+	db_maxtemp		map[string]common.DeviceInfo_t
+	db_abstemp		map[string]common.DeviceInfo_t
+	db_reltemp		map[string]common.DeviceInfo_t
 	db_averagepower		map[string]common.DeviceInfo_t
-	db_maxpower			map[string]common.DeviceInfo_t
-	db_obj				map[string]common.DeviceInfo_t
+	db_maxpower		map[string]common.DeviceInfo_t
+	db_obj			map[string]common.DeviceInfo_t
 	db_expectfanduty	map[string]common.DeviceInfo_t
 	db_device_fan_map	map[string]common.DeviceInfo_t
 	db_fan_output		map[string]common.DeviceInfo_t
+	db_device_cpu_info	map[string]common.DeviceInfo_t
 }
 
 func get_hdr(data interface{}) (int32, int32, string) {
@@ -81,10 +82,11 @@ func (o* TaskDao)Run() {
 	o.db_reltemp		= make(map[string]common.DeviceInfo_t)
 	o.db_averagepower	= make(map[string]common.DeviceInfo_t)
 	o.db_maxpower		= make(map[string]common.DeviceInfo_t)
-	o.db_obj			= make(map[string]common.DeviceInfo_t)
+	o.db_obj		= make(map[string]common.DeviceInfo_t)
 	o.db_expectfanduty	= make(map[string]common.DeviceInfo_t)
 	o.db_device_fan_map	= make(map[string]common.DeviceInfo_t)
 	o.db_fan_output		= make(map[string]common.DeviceInfo_t)
+	o.db_device_cpu_info	= make(map[string]common.DeviceInfo_t)
 
 	mb_dao := mailbox.CreateMailboxDao()
 	var res_msg common.Msg_t
@@ -144,6 +146,11 @@ func (o* TaskDao)Run() {
 			res_msg = set_record(msg, o.db_device_fan_map)
 		case config.GET_ALL_DEVICE_FAN_MAP:
 			res_msg = get_records(msg, o.db_device_fan_map)
+
+		case config.GET_DEVICE_CPU_INFO:
+			res_msg = get_records(msg, o.db_device_cpu_info)
+		case config.SET_DEVICE_CPU_INFO:
+			res_msg = set_record(msg, o.db_device_cpu_info)
 
 		case config.GET_OBJ_BY_KEY:
 			res_msg = get_record(msg, o.db_obj)

@@ -21,6 +21,7 @@ const TYPE_MAXPOWER		int32 = 0x4
 const TYPE_INITFANDUTY		int32 = 0x5
 const TYPE_FANDUTY		int32 = 0x6
 const TYPE_DEVICEFANMAP		int32 = 0x7
+const TYPE_CPUINFO		int32 = 0x8
 // Used in "SET" response packet
 const TYPE_REQUEST		int32 = 0x80
 

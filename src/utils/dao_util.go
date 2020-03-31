@@ -260,3 +260,20 @@ func PullObjDeviceExpectFanDuty(entity int32, instant int32) (common.DeviceInfo_
 	return obj
 }
 
+func PullObjDeviceCpuInfo(entity int32, instant int32) (common.DeviceInfo_t) {
+	cpu_info := common.ValueCpuInfo_t { MaxTdp:0, CoreNum:0, Identity: "" }
+	data := common.DeviceInfo_t { Entity: entity, Instant: instant, ValueType: config.TYPE_CPUINFO, Value: cpu_info}
+	data.Key = createKeyByTEI(data.ValueType, data.Entity, data.Instant)
+	msg := TalkToDao(config.GET_DEVICE_CPU_INFO, data)
+	obj := (msg.Data).(common.DeviceInfo_t)
+	return obj
+}
+
+func PushObjDeviceCpuInfo(entity int32, instant int32, cpu_info common.ValueCpuInfo_t) (common.DeviceInfo_t) {
+	data := common.DeviceInfo_t { Entity: entity, Instant: instant, ValueType: config.TYPE_CPUINFO, Value: cpu_info}
+	data.Key = createKeyByTEI(data.ValueType, data.Entity, data.Instant)
+	msg := TalkToDao(config.SET_DEVICE_CPU_INFO, data)
+	obj := (msg.Data).(common.DeviceInfo_t)
+	return obj
+}
+

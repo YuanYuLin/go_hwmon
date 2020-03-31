@@ -33,6 +33,9 @@ const GET_DEVICE_FAN_DUTY_OUTPUT	string = "g_d_fan_duty_out"
 const SET_DEVICE_FAN_DUTY_OUTPUT	string = "s_d_fan_duty_out"
 const GET_ALL_FAN_DUTY_OUTPUT		string = "g_all_fan_duty_out"
 
+const GET_DEVICE_CPU_INFO		string = "g_device_cpu_info"
+const SET_DEVICE_CPU_INFO		string = "s_device_cpu_info"
+
 const GET_OBJ_BY_KEY			string = "g_o_b_k"
 const SET_OBJ_BY_KEY			string = "s_o_b_k"
 

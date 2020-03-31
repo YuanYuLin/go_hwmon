@@ -159,6 +159,37 @@ func GetMapAllDevicesExpectFanDuty(w http.ResponseWriter, r* http.Request) {
     responseWithJsonV1(w, http.StatusOK, obj)
 }
 
+func GetDeviceCpuInfo(w http.ResponseWriter, r* http.Request) {
+    b, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+
+    data := utils.ConvertBytesToDeviceInfo(b)
+    obj := utils.PullObjDeviceCpuInfo(data.Entity, data.Instant)
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+
+func SetDeviceCpuInfo(w http.ResponseWriter, r* http.Request) {
+    b, err := ioutil.ReadAll(r.Body)
+    defer r.Body.Close()
+    if err != nil {
+        ops_log.Debug(0x1, "Set Error %s", err)
+    }
+
+    data := utils.ConvertBytesToDeviceInfo(b)
+    cpu_info := utils.ConvertValueToCpuInfo(data.ValueType, data.Value)
+    obj := utils.PushObjDeviceCpuInfo(data.Entity, data.Instant, cpu_info)
+    responseWithJsonV1(w, http.StatusOK, obj)
+}
+
+func GetDeviceAicInfo(w http.ResponseWriter, r* http.Request) {
+}
+
+func SetDeviceAicInfo(w http.ResponseWriter, r* http.Request) {
+}
+
 func ExitMain(w http.ResponseWriter, r* http.Request) {
     _, err := ioutil.ReadAll(r.Body)
     defer r.Body.Close()
@@ -224,6 +255,14 @@ var rest_api_list = []rest_api_t {
     /*
      *
      */
+    {"/api/v1/hwmon/get/device/cpu/info",	GetDeviceCpuInfo},
+    {"/api/v1/hwmon/set/device/cpu/info",	SetDeviceCpuInfo},
+    {"/api/v1/hwmon/get/device/aic/info",	GetDeviceAicInfo},
+    {"/api/v1/hwmon/set/device/aic/info",	SetDeviceAicInfo},
+
+    /*
+     *
+     */
     {"/api/v1/hwmon/get/device/fanmap",		GetMapDeviceFan},
     {"/api/v1/hwmon/get/map/alldevicefan",	GetMapAllDeviceFan},
     {"/api/v1/hwmon/get/map/allfandutyout",	GetMapAllFanDutyOut},
@@ -240,5 +279,6 @@ var rest_api_list = []rest_api_t {
      */
     {"/", PageIndex},
     {"/debug.html", PageDebug},
+    {"/devicefanmap.html", PageDeviceFanMap},
 }
 
